@@ -9,7 +9,7 @@ namespace TechJobsPersistent.Data
         public DbSet<Employer> Employers { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<JobSkill> JobSkills { get; set; }
-
+        // Create Options for the dataset for each of the things that it pulls in.
         public JobDbContext(DbContextOptions<JobDbContext> options)
             : base(options)
         {
