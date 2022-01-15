@@ -16,28 +16,62 @@ namespace TechJobsPersistent.Controllers
     public class HomeController : Controller
     {
         private JobDbContext context;
+        private List<Employer> employers;
 
         public HomeController(JobDbContext dbContext)
         {
+
             context = dbContext;
+            employers = dbContext.Employers.ToList();
         }
 
         public IActionResult Index()
         {
             List<Job> jobs = context.Jobs.Include(j => j.Employer).ToList();
 
+           //List<Employer> = employers 
+           Console.WriteLine(jobs);
             return View(jobs);
+
         }
 
         [HttpGet("/Add")]
         public IActionResult AddJob()
         {
-            return View();
+            AddJobViewModel viewModel = new AddJobViewModel();
+            List<SelectListItem> items = new List<SelectListItem>();
+            
+            foreach(Employer e in employers)
+            {
+                SelectListItem item = new SelectListItem();
+                item.Text = e.Name;
+                item.Value = e.Id.ToString();
+                item.Selected = false;
+                items.Add(item);
+            }
+
+            viewModel.Employers = items;
+
+            return View(viewModel);
         }
 
-        public IActionResult ProcessAddJobForm()
+        public IActionResult ProcessAddJobForm(AddJobViewModel addJobViewModel)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                Employer emp = context.Employers.Find(addJobViewModel.EmployerId);
+                Job newJob = new Job
+                {
+                    Employer = emp,
+                    Name = addJobViewModel.Name,
+                    EmployerId = addJobViewModel.EmployerId
+                };
+                context.Jobs.Add(newJob);
+                context.SaveChanges();
+
+                return Redirect("/Job");
+            }
+            return View("AddJob", addJobViewModel);
         }
 
         public IActionResult Detail(int id)
