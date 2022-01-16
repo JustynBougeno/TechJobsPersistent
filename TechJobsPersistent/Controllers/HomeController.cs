@@ -22,7 +22,7 @@ namespace TechJobsPersistent.Controllers
         {
 
             context = dbContext;
-            employers = dbContext.Employers.ToList();
+            
         }
 
         public IActionResult Index()
@@ -38,7 +38,7 @@ namespace TechJobsPersistent.Controllers
         [HttpGet("/Add")]
         public IActionResult AddJob()
         {
-            AddJobViewModel viewModel = new AddJobViewModel();
+            employers = context.Employers.ToList();
             List<SelectListItem> items = new List<SelectListItem>();
             
             foreach(Employer e in employers)
@@ -50,13 +50,15 @@ namespace TechJobsPersistent.Controllers
                 items.Add(item);
             }
 
-            viewModel.Employers = items;
+            AddJobViewModel addJobViewModel = new AddJobViewModel(items);
 
-            return View(viewModel);
+            return View(addJobViewModel);
         }
 
+        [HttpPost]
         public IActionResult ProcessAddJobForm(AddJobViewModel addJobViewModel)
         {
+            Console.WriteLine(ModelState.IsValid);
             if (ModelState.IsValid)
             {
                 Employer emp = context.Employers.Find(addJobViewModel.EmployerId);
@@ -69,7 +71,9 @@ namespace TechJobsPersistent.Controllers
                 context.Jobs.Add(newJob);
                 context.SaveChanges();
 
-                return Redirect("/Job");
+                string redirectUrl = "/List/Jobs?column=employer&value=" + emp.Name;
+
+                return Redirect(redirectUrl);
             }
             return View("AddJob", addJobViewModel);
         }
@@ -90,3 +94,45 @@ namespace TechJobsPersistent.Controllers
         }
     }
 }
+
+
+/*public IActionResult Add()
+{
+    List<EventCategory> categories = context.Categories.ToList();
+    AddEventViewModel addEventViewModel = new AddEventViewModel(categories);
+
+    return View(addEventViewModel);
+}
+
+[HttpPost]
+public IActionResult Add(AddEventViewModel addEventViewModel)
+{
+    if (ModelState.IsValid)
+    {
+        EventCategory theCategory = context.Categories.Find(addEventViewModel.CategoryId);
+        Event newEvent = new Event
+        {
+            Name = addEventViewModel.Name,
+            Description = addEventViewModel.Description,
+            ContactEmail = addEventViewModel.ContactEmail,
+            Category = theCategory
+        };
+
+        context.Events.Add(newEvent);
+        context.SaveChanges();
+
+        return Redirect("/Events");
+    }
+
+    return View(addEventViewModel);
+}
+
+public IActionResult Detail(int id)
+        {
+            Event theEvent = context.Events
+               .Include(e => e.Category)
+               .Single(e => e.Id == id);
+
+            EventDetailViewModel viewModel = new EventDetailViewModel(theEvent);
+            return View(v 
+ */
