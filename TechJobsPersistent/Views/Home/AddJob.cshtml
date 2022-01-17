@@ -13,6 +13,20 @@
 
         <a href="../Employer/Add">Add Employer</a>
     </div>
+
+
+    <div class="form-group">
+        <label>Skills</label>
+        <br />
+        @foreach (Skill skill in Model.Skills)
+        {
+         <label>@skill.Name</label>
+                    <input type="checkbox" name="selectedSkills" value="@skill.Id" />}
+        <br />
+        <a asp-controller="Skill" asp-action="Add">Add Skill</a>
+    </div>
+
+
     <input type="submit" value="Add Job" />
 </form>
 
