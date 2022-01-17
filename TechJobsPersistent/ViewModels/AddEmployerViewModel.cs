@@ -11,20 +11,24 @@ namespace TechJobsPersistent.Models
         [Required(ErrorMessage = "Location is required")]
         public string Location { get; set; }
 
-        public AddEmployerViewModel(string newName, string newLocation)
-        {
-            Name = newName;
-            Location = newLocation;
-        }
+        //[Required(ErrorMessage = "Job is required")]
+        //public string Job { get; set; }
 
-        public AddEmployerViewModel()
-        {
+        //public AddEmployerViewModel(string newName, string newLocation)
+        //{
+        //    Name = newName;
+        //    Location = newLocation;
+            //Job = newJob;
+        //}
 
-        }
+        //public AddEmployerViewModel()
+        //{
 
-        internal static void Add(Employer newEmployer)
-        {
-            throw new NotImplementedException();
-        }
+        //}
+
+        //internal static void Add(Employer newEmployer)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
